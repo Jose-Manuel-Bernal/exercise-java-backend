@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface CyclistRepository extends ReactiveMongoRepository<Cyclist, String> {
-    Mono<Boolean> existFromNumber(Integer number);
+    Mono<Boolean> existsByNumber(Integer number);
 }
