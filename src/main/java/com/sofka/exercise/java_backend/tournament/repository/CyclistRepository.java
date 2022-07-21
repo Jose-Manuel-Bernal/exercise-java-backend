@@ -11,4 +11,5 @@ public interface CyclistRepository extends ReactiveMongoRepository<Cyclist, Stri
     Mono<Boolean> existsByNumber(Integer number);
     Flux<Cyclist> findByTeamCode(String teamCode);
     Flux<Cyclist> findByCountry(String country);
+    Mono<Cyclist> findByNumber(Integer number);
 }

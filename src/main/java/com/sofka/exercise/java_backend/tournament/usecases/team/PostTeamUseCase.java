@@ -4,19 +4,24 @@ import com.sofka.exercise.java_backend.tournament.dto.TeamDTO;
 import com.sofka.exercise.java_backend.tournament.mapper.TeamMapper;
 import com.sofka.exercise.java_backend.tournament.repository.TeamRepository;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 @Service
-public class getAllTeamsUseCase {
+@Validated
+public class PostTeamUseCase {
     private TeamRepository repository;
     private TeamMapper mapper;
 
-    public getAllTeamsUseCase(TeamRepository repository, TeamMapper mapper) {
+    public PostTeamUseCase(TeamRepository repository, TeamMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-    public Flux<TeamDTO> apply() {
-        return repository.findAll().map(team -> mapper.toTeamDTO(team));
+    public Mono<TeamDTO> apply(@Valid TeamDTO teamDTO) {
+        return repository.save(mapper.toTeamEntity(teamDTO))
+                .map(team -> mapper.toTeamDTO(team));
     }
 }

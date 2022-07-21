@@ -21,6 +21,13 @@ public class PutCyclistUseCase {
     }
 
     public Mono<CyclistDTO> apply(@Valid CyclistDTO cyclistDTO) {
-        return repository.save(mapper.toCyclistEntity(cyclistDTO)).map(cyclist -> mapper.toCyclistDTO(cyclist));
+        Integer cyclistNum = cyclistDTO.getNumber();
+        return repository.existsByNumber(cyclistNum).flatMap(aBoolean -> {
+            if (Boolean.TRUE.equals(aBoolean)){
+                return Mono.error(() -> new Exception("the number has already been taken"));
+            }
+            return repository.save(mapper.toCyclistEntity(cyclistDTO))
+                    .map(cyclist -> mapper.toCyclistDTO(cyclist));
+        });
     }
 }

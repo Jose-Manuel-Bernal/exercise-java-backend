@@ -23,10 +23,6 @@ public class PostCyclistUseCase {
         this.repository = repository;
     }
 
-//    public Mono<CyclistDTO> apply(@Valid CyclistDTO cyclistDTO) {
-//        return checkNumber(cyclistDTO);
-//    }
-
     public Mono<CyclistDTO> apply(@Valid CyclistDTO cyclistDTO) {
         Integer cyclistNum = cyclistDTO.getNumber();
         return repository.existsByNumber(cyclistNum).flatMap(aBoolean -> {
