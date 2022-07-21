@@ -16,6 +16,5 @@ public class TeamDTO {
     private String teamCode;
     @NotBlank(message = "team's country cannot be empty")
     private String country;
-    @Size(max = 8)
     private List<CyclistDTO> teamList;
 }

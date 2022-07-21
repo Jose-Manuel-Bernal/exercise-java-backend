@@ -4,23 +4,22 @@ import com.sofka.exercise.java_backend.tournament.dto.CyclistDTO;
 import com.sofka.exercise.java_backend.tournament.mapper.CyclistMapper;
 import com.sofka.exercise.java_backend.tournament.repository.CyclistRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
-
 @Service
-@Validated
-public class PutCyclistUseCase {
+public class GetCyclistsByTeamCodeUseCase {
     private CyclistRepository repository;
     private CyclistMapper mapper;
 
-    public PutCyclistUseCase(CyclistRepository repository, CyclistMapper mapper) {
+    public GetCyclistsByTeamCodeUseCase(CyclistRepository repository, CyclistMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-    public Mono<CyclistDTO> apply(@Valid CyclistDTO cyclistDTO) {
-        return repository.save(mapper.toCyclistEntity(cyclistDTO)).map(cyclist -> mapper.toCyclistDTO(cyclist));
+    public Flux<CyclistDTO> apply(String teamCode) {
+        return repository.findByTeamCode(teamCode)
+                .map(cyclist -> mapper.toCyclistDTO(cyclist))
+                .switchIfEmpty(Mono.error(() -> new Exception("No cyclist found with this team code")));
     }
 }
